@@ -36,6 +36,6 @@
   "dependencies": {
     "bluebird": "~2.10.1",
     "debug": "~2.2.0",
-    "docker-cli-js": "^1.0.6"
+    "docker-cli-js": "^1.0.7"
   }
 }
