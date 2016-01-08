@@ -1,5 +1,4 @@
-﻿var _ = require('lodash');
-var Promise = require("bluebird");
+﻿var Promise = require("bluebird");
 var Docker = require('docker-cli-js');
 var util = require('util');
 var path = require('path');
