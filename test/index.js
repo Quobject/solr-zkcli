@@ -35,15 +35,18 @@ describe('solrZkcli', function () {
 
     Promise.resolve().then(function () {
    
-
       var options = {
-        zkhost: '127.0.0.1:' + config.zkport,
+        zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
         cmd: 'upconfig',
-        confname: 'my_new_config4',
-        confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf2')
+        confname: 'my_new_config6',
+        confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
       };
     
-      return solrZkcli(options);
+      return solrZkcli(options).then(function (data) {
+        console.log('data = ', data);
+        return data;
+      });
+
 
     }).then(function (data) {
       debug('data', data);
@@ -53,6 +56,26 @@ describe('solrZkcli', function () {
     });
 
   });
+
+
+  //it('upconfig with callback', function (done) {
+
+
+  //  var options = {
+  //    zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
+  //    cmd: 'upconfig',
+  //    confname: 'my_new_config6',
+  //    confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
+  //  };
+
+
+  //  solrZkcli(options, function (err, data) {
+  //    console.log('data2 = ', data);
+  //    done();
+  //  });
+
+  //});
+
 
 });
 

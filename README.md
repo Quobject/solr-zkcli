@@ -6,7 +6,12 @@ A node.js implementation of Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud c
 
 ## Installation
 
-   
+### Step 1: Prerequisites
+
+The [docker](https://docs.docker.com/engine/installation/) command line tool must be installed and accessible in the path 
+
+### Step 2: Installation
+  
     npm install solr-zkcli
     
 Then:
@@ -32,7 +37,7 @@ solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
 });
 
-//
+//data =  { ok: true }
 
 ```
 

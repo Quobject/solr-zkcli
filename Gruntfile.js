@@ -7,7 +7,7 @@ var util = require('util');
 
 
 
-module.exports = function (grunt) {   
+module.exports = function (grunt) {
   var debug = require('debug')('solr-zkcli:Gruntfile.js');
   var config = JSON.parse(strip_json(String(fs.readFileSync(path.join(__dirname, 'config.json')))));
   debug('config', config);
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         },
         src: ['./test/**/*.js']
       }
-    },  
+    },
 
   });
 
