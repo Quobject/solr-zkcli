@@ -13,55 +13,46 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-
+/*global describe, it, before */
 var solrZkcli = require('../lib/index.js');
 var Promise = require("bluebird");
 var path = require('path');
 var should = require('chai').should();
 var assert = require('chai').assert;
 var util = require('util');
-var debug = require('debug')('zookeeper-commands:test/index.js');
+var debug = require('debug')('solr-zkcli:test/index.js');
+var Promise = require("bluebird");
+var strip_json = require('strip-json-comments');
+var fs = require('fs');
 
 
+var config = JSON.parse(strip_json(String(fs.readFileSync(path.join(__dirname,'..', 'config.json')))));
+debug('config', config);
 
 describe('solrZkcli', function () {
 
- 
+  it('upconfig', function (done) {
 
-  //it('should allow only four letters', function (done) {
-  //  this.timeout(1 * 60 * 1000);//1 minute
+    Promise.resolve().then(function () {
+   
 
-  //  var promises = [];
+      var options = {
+        zkhost: '127.0.0.1:' + config.zkport,
+        cmd: 'upconfig',
+        confname: 'my_new_config4',
+        confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf2')
+      };
+    
+      return solrZkcli(options);
 
-  //  [null, '', 'a', 'aaa', 'aaaaa'].forEach(function (item) {
-  //    debug('command = ', item);
-  //    var error;
-  //    var zookeeperCommands = new ZookeeperCommands({
-  //      host: HOST,
-  //      port: PORT
-  //    });
-  //    var promise = zookeeperCommands.command(item).then(function (data) {
-  //      console.log('data = ', util.inspect(data, { depth: 10 }));
-  //      assert.isNotNull(data);
-  //      done();
-  //    }).catch(function (error2) {
-  //      debug('error = ' + error2);
-  //      error = error2;
-  //    }).finally(function () {
-  //      assert.equal(error, 'Each command must be composed of four letters https://zookeeper.apache.org/doc/r3.4.6/zookeeperAdmin.html#sc_zkCommands');
-  //      debug('finally');
-  //    });
+    }).then(function (data) {
+      debug('data', data);
+    }).finally(function () {
+      debug('finally');
+      done();
+    });
 
-  //    promises.push(promise);
-
-  //  });
-
-  //  Promise.all(promises).then(function () {
-  //    done();
-  //  });
-  //});
-
-
+  });
 
 });
 

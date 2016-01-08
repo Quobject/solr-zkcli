@@ -1,5 +1,5 @@
 # solr-zkcli
-A node.js implementation of Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud configuration parameters](https://cwiki.apache.org/confluence/display/solr/Command+Line+Utilities)/
+A node.js implementation of Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud configuration parameters](https://cwiki.apache.org/confluence/display/solr/Command+Line+Utilities)
 
 [![NPM](https://nodei.co/npm/solr-zkcli.png?downloads=true&downloadRank=true)](https://nodei.co/npm/solr-zkcli/)
 [![NPM](https://nodei.co/npm-dl/solr-zkcli.png?months=6&height=3)](https://nodei.co/npm/solr-zkcli/)
