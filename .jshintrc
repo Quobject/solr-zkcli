@@ -3,7 +3,7 @@
   "devel": true,
   "indent": 2,
   "maxerr": 50,
-  "newcap": true,
+  "newcap": false,
   "nomen": true,
   "plusplus": false,
   "regexp": true,

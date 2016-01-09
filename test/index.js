@@ -32,13 +32,14 @@ debug('config', config);
 describe('solrZkcli', function () {
 
   it('upconfig', function (done) {
+    this.timeout(15000);
 
     Promise.resolve().then(function () {
    
       var options = {
         zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
         cmd: 'upconfig',
-        confname: 'my_new_config6',
+        confname: 'my_new_config',
         confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
       };
     
