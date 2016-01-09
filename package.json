@@ -1,6 +1,6 @@
 {
   "name": "solr-zkcli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage SolrCloud configuration parameters",
   "main": "lib/index.js",
   "scripts": {

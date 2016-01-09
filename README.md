@@ -10,7 +10,11 @@ A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud con
 
 The [docker](https://docs.docker.com/engine/installation/) command line tool must be installed and accessible in the path. 
 
-### Step 2: Installation
+### Step 2: Get solr image
+
+    docker pull solr
+
+### Step 3: Installation
   
     npm install solr-zkcli
     

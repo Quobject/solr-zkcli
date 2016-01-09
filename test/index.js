@@ -31,32 +31,32 @@ debug('config', config);
 
 describe('solrZkcli', function () {
 
-  it('upconfig', function (done) {
-    this.timeout(15000);
+  //it('upconfig', function (done) {
+  //  this.timeout(600000);
 
-    Promise.resolve().then(function () {
+  //  Promise.resolve().then(function () {
    
-      var options = {
-        zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
-        cmd: 'upconfig',
-        confname: 'my_new_config',
-        confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
-      };
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
+  //      cmd: 'upconfig',
+  //      confname: 'my_new_config',
+  //      confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
+  //    };
     
-      return solrZkcli(options).then(function (data) {
-        console.log('data = ', data);
-        return data;
-      });
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
 
 
-    }).then(function (data) {
-      debug('data', data);
-    }).finally(function () {
-      debug('finally');
-      done();
-    });
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
 
-  });
+  //});
 
 
   //it('upconfig with callback', function (done) {
@@ -76,6 +76,34 @@ describe('solrZkcli', function () {
   //  });
 
   //});
+
+
+  it('bootstrap', function (done) {
+    this.timeout(600000);
+
+    Promise.resolve().then(function () {
+
+      var options = {
+        zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
+        cmd: 'bootstrap',
+        solrhome: path.join(__dirname, '..', 'test', 'solr')
+      };
+
+      return solrZkcli(options).then(function (data) {
+        console.log('data = ', data);
+        return data;
+      });
+
+
+    }).then(function (data) {
+      debug('data', data);
+    }).finally(function () {
+      debug('finally');
+      done();
+    });
+
+  });
+
 
 
 });
