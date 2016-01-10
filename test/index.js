@@ -37,7 +37,7 @@ describe('solrZkcli', function () {
   //  Promise.resolve().then(function () {
    
   //    var options = {
-  //      zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
+  //      zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
   //      cmd: 'upconfig',
   //      confname: 'my_new_config',
   //      confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
@@ -78,15 +78,149 @@ describe('solrZkcli', function () {
   //});
 
 
-  it('bootstrap', function (done) {
+  //it('bootstrap', function (done) {
+  //  this.timeout(600000);
+
+  //  Promise.resolve().then(function () {
+
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
+  //      cmd: 'bootstrap',
+  //      solrhome: path.join(__dirname, '..', 'test', 'solr')
+  //    };
+
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
+
+
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
+
+  //});
+
+
+  //it('put', function (done) {
+  //  this.timeout(600000);
+
+  //  Promise.resolve().then(function () {
+
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport,
+  //      cmd: 'put /my_zk_file.txt \'some data\''
+  //    };
+
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
+
+
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
+
+  //});
+
+
+  //it('putfile', function (done) {
+  //  this.timeout(600000);
+
+  //  Promise.resolve().then(function () {
+
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport,
+  //      cmd: 'putfile /my_zk_file.txt ' + path.join(__dirname,  'my_local_file.txt')
+  //    };
+
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
+
+
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
+
+  //});
+
+
+  //it('linkconfig', function (done) {
+  //  this.timeout(600000);
+
+  //  Promise.resolve().then(function () {
+
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
+  //      cmd: 'linkconfig',
+  //      collection: 'gettingstarted',
+  //      confname: 'my_new_config'
+  //    };
+
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
+
+
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
+
+  //});
+
+
+  //it('makepath', function (done) {
+  //  this.timeout(600000);
+
+  //  Promise.resolve().then(function () {
+
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport,
+  //      cmd: 'makepath /solr'
+  //    };
+
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
+
+
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
+
+  //});
+
+
+  it('clusterprop', function (done) {
     this.timeout(600000);
 
     Promise.resolve().then(function () {
 
       var options = {
-        zkhost: '127.0.0.1:' + config.zkport + '/fmlogging',
-        cmd: 'bootstrap',
-        solrhome: path.join(__dirname, '..', 'test', 'solr')
+        zkhost: '127.0.0.1:' + config.zkport,
+        cmd: 'clusterprop',
+        name: 'urlScheme',
+        val: 'https'
       };
 
       return solrZkcli(options).then(function (data) {
@@ -103,8 +237,6 @@ describe('solrZkcli', function () {
     });
 
   });
-
-
 
 });
 
