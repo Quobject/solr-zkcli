@@ -39,7 +39,7 @@ describe('solrZkcli', function () {
   //    var options = {
   //      zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
   //      cmd: 'upconfig',
-  //      confname: 'my_new_config3',
+  //      confname: 'my_new_config5',
   //      confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
   //    };
     
@@ -67,7 +67,7 @@ describe('solrZkcli', function () {
       var options = {
         zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
         cmd: 'downconfig',
-        confname: 'my_new_config',
+        confname: 'my_new_config5',
         confdir: path.join(__dirname, '..', 'test', 'download')
       };
 
