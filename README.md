@@ -143,3 +143,21 @@ solrZkcli( options ).then(function (data) {
 
 ```
 
+* downconfig
+
+```js
+
+var options = {
+  zkhost: '127.0.0.1:9983',
+  cmd: 'downconfig',
+  confname: 'my_new_config',
+  confdir: '/var/download'
+}
+
+solrZkcli( options ).then(function (data) {
+  console.log('data = ', data); 
+});
+
+//data =  { ok: true }
+
+```
