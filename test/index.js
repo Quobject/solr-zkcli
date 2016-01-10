@@ -39,7 +39,7 @@ describe('solrZkcli', function () {
   //    var options = {
   //      zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
   //      cmd: 'upconfig',
-  //      confname: 'my_new_config',
+  //      confname: 'my_new_config3',
   //      confdir: path.join(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf')
   //    };
     
@@ -58,6 +58,33 @@ describe('solrZkcli', function () {
 
   //});
 
+
+  it('downconfig', function (done) {
+    this.timeout(600000);
+
+    Promise.resolve().then(function () {
+
+      var options = {
+        zkhost: '127.0.0.1:' + config.zkport, //+ '/fmlogging',
+        cmd: 'downconfig',
+        confname: 'my_new_config',
+        confdir: path.join(__dirname, '..', 'test', 'download')
+      };
+
+      return solrZkcli(options).then(function (data) {
+        console.log('data = ', data);
+        return data;
+      });
+
+
+    }).then(function (data) {
+      debug('data', data);
+    }).finally(function () {
+      debug('finally');
+      done();
+    });
+
+  });
 
   //it('upconfig with callback', function (done) {
 
@@ -211,32 +238,32 @@ describe('solrZkcli', function () {
   //});
 
 
-  it('clusterprop', function (done) {
-    this.timeout(600000);
+  //it('clusterprop', function (done) {
+  //  this.timeout(600000);
 
-    Promise.resolve().then(function () {
+  //  Promise.resolve().then(function () {
 
-      var options = {
-        zkhost: '127.0.0.1:' + config.zkport,
-        cmd: 'clusterprop',
-        name: 'urlScheme',
-        val: 'https'
-      };
+  //    var options = {
+  //      zkhost: '127.0.0.1:' + config.zkport,
+  //      cmd: 'clusterprop',
+  //      name: 'urlScheme',
+  //      val: 'https'
+  //    };
 
-      return solrZkcli(options).then(function (data) {
-        console.log('data = ', data);
-        return data;
-      });
+  //    return solrZkcli(options).then(function (data) {
+  //      console.log('data = ', data);
+  //      return data;
+  //    });
 
 
-    }).then(function (data) {
-      debug('data', data);
-    }).finally(function () {
-      debug('finally');
-      done();
-    });
+  //  }).then(function (data) {
+  //    debug('data', data);
+  //  }).finally(function () {
+  //    debug('finally');
+  //    done();
+  //  });
 
-  });
+  //});
 
 });
 

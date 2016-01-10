@@ -12,7 +12,7 @@ The [docker](https://docs.docker.com/engine/installation/) command line tool mus
 
 ### Step 2: Get solr image
 
-    docker pull solr
+    docker pull quobjectio/solr:1.0.0
 
 ### Step 3: Installation
   

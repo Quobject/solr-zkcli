@@ -2,6 +2,8 @@
 logs
 *.log
 
+test/download
+
 # Runtime data
 pids
 *.pid
