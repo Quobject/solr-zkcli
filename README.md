@@ -35,7 +35,7 @@ var options = {
   cmd: 'upconfig',
   confname: 'my_new_config',
   confdir: 'server/solr/configsets/basic_configs/conf'
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -63,7 +63,7 @@ var options = {
   zkhost: '127.0.0.1:9983/fmlogging',
   cmd: 'bootstrap',
   solrhome: 'server/solr/'
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -80,7 +80,7 @@ solrZkcli( options ).then(function (data) {
 var options = {
   zkhost: '127.0.0.1:9983',
   cmd: 'put /my_zk_file.txt \'some data\''
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -97,7 +97,7 @@ solrZkcli( options ).then(function (data) {
 var options = {
   zkhost: '127.0.0.1:9983',
   cmd: 'putfile /my_zk_file.txt /tmp/my_local_file.txt'
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -114,7 +114,7 @@ solrZkcli( options ).then(function (data) {
 var options = {
   zkhost: '127.0.0.1:9983',
   cmd: 'makepath /solr'
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -152,7 +152,7 @@ var options = {
   cmd: 'downconfig',
   confname: 'my_new_config',
   confdir: '/var/download'
-}
+};
 
 solrZkcli( options ).then(function (data) {
   console.log('data = ', data); 
@@ -160,4 +160,83 @@ solrZkcli( options ).then(function (data) {
 
 //data =  { ok: true }
 
+```
+
+* get
+
+```js
+
+var options = {
+  zkhost: '127.0.0.1:' + config.zkport,
+  cmd: 'get /my_zk_file.txt'
+};
+
+solrZkcli( options ).then(function (data) {
+  console.log('data = ', data); 
+});
+
+//data =  data =  { ok: true, returnedData: 'some data' }
+
+```
+
+* getfile
+
+```js
+
+var options = {
+  zkhost: '127.0.0.1:' + config.zkport,
+  cmd: 'get /my_zk_file.txt /path/to/return.txt'
+};
+
+solrZkcli( options ).then(function (data) {
+  console.log('data = ', data); 
+});
+
+//data =  data =  { ok: true }
+
+```
+
+
+
+* list
+
+```js
+
+var options = {
+  zkhost: '127.0.0.1:' + config.zkport,
+  cmd: 'list'
+};
+
+solrZkcli( options ).then(function (data) {
+  console.log('data = ', data); 
+});
+
+//data = {
+//  ok: true,
+//  returnedData:
+//   ['/ (2)',
+//     'DATA:',
+//     '    ',
+//     ' /my_zk_file.txt (0)',
+//     ' DATA: ...supressed...',
+//     ' /zookeeper (1)',
+//     ' DATA:']
+//}
+
+```
+
+* clear
+
+```js
+
+var options = {
+  zkhost: '127.0.0.1:' + config.zkport,
+  cmd: 'clear /solr'
+};
+
+solrZkcli( options ).then(function (data) {
+  console.log('data = ', data); 
+});
+
+//data =  { ok: true }
 ```
