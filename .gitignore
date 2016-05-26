@@ -2,8 +2,6 @@
 logs
 *.log
 
-test/download
-
 # Runtime data
 pids
 *.pid
@@ -29,3 +27,9 @@ build/Release
 node_modules
 
 my_config.json
+
+
+.DS_Store
+npm-debug.log
+dist
+typings
