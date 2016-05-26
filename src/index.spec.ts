@@ -20,7 +20,6 @@ test('solr-zkcli', t => {
     return solrZkCliCommand(options).then(function (data) {
       console.log('data = ', util.inspect(data, { depth: 10 }));
       t.ok(data);
-      t.ok(data.object.ok);
     });
 
   });

@@ -1,16 +1,16 @@
 ﻿import * as _ from 'lodash';
 import * as Promise from 'bluebird';
-import * as child_process from 'child_process';
+//import * as child_process from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
 import * as moment from 'moment';
-import { Docker, Options as DockerOptions} from 'docker-cli-js';
+import { Docker } from 'docker-cli-js';
 const JSONPath = require('jsonpath-plus');
-const exec2 = child_process.exec;
+//const exec2 = child_process.exec;
 
 
-var waitForContainerToFinish = function (containerid: string, options?) {
+const waitForContainerToFinish = function (containerid: string, options?) {
   containerid = containerid.substring(0, 12);
 
   if (!options) {
@@ -21,33 +21,33 @@ var waitForContainerToFinish = function (containerid: string, options?) {
   options.checkIntervalInMilliSeconds = options.checkIntervalInMilliSeconds || 500;
 
   options.internalUseOnly = options.internalUseOnly || {
+    endTime: moment().add(options.timeoutInSeconds, 's'),
     startTime: moment(),
-    endTime: moment().add(options.timeoutInSeconds, 's')
   };
 
 
 
-  //debug('options', options);
+  //console.log('options', options);
 
-  var now = moment();
+  const now = moment();
 
-  //debug('now', now.format());
-  var diff = now.valueOf() - options.internalUseOnly.startTime.valueOf();
-  //debug('diff ms', diff);
+  //console.log('now', now.format());
+  //const diff = now.valueOf() - options.internalUseOnly.startTime.valueOf();
+  //console.log('diff ms', diff);
 
   if (now.isBefore(options.internalUseOnly.endTime)) {
     return Promise.delay(options.checkIntervalInMilliSeconds).then(function () {
 
-      var docker = new Docker();
+      const docker = new Docker();
 
       return docker.command('ps');
     }).then(function (data) {
-      //debug('data.containerList', data.containerList);
+      //console.log('data.containerList', data.containerList);
       //'$.*[?(@.names="zookeeper")]'      
-      var result = JSONPath({ json: data.containerList, path: '$.*.container id' });
-      var stillRunning = _.contains(result, containerid);
-      //debug('result', result);
-      //debug('stillRunning', stillRunning);
+      const result = JSONPath({ json: data.containerList, path: '$.*.container id' });
+      const stillRunning = _.contains(result, containerid);
+      //console.log('result', result);
+      //console.log('stillRunning', stillRunning);
 
       if (stillRunning) {
         return waitForContainerToFinish(containerid, options);
@@ -58,25 +58,25 @@ var waitForContainerToFinish = function (containerid: string, options?) {
 
   return Promise.resolve().then(function () {
 
-    var docker = new Docker();
+    const docker = new Docker();
 
     return docker.command('rm -f ' + containerid);
   }).then(function (data) {
-    //debug('data', data);
+    //console.log('data', data);
     throw 'ERROR timeout';
   });
 };
 
 
-var zkcliViaDocker = function (cmdArray, cmd?) {
-  var docker = new Docker();
-  var containerid;
-  var error = '';
-  var returned_data = '';
+const zkcliViaDocker = function (cmdArray, cmd?) {
+  const docker = new Docker();
+  let containerid;
+  let error = '';
+  let returned_data = '';
 
   return Promise.resolve().then(function () {
 
-    var command = cmdArray.join('');
+    const command = cmdArray.join('');
 
     return docker.command(command);
   }).then(function (data) {
@@ -85,7 +85,7 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
 
     return waitForContainerToFinish(containerid);
   }).then(function () {
-    var command2 = 'logs ' + containerid;
+    const command2 = 'logs ' + containerid;
     return docker.command(command2);
 
   }).then(function (data2) {
@@ -93,7 +93,7 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
     if (!data2 || !data2.raw) {
       error += 'docker logs failed !data2 ';
     } else {
-      var obj = JSON.parse(data2.raw);
+      const obj = JSON.parse(data2.raw);
 
       if (cmd === 'get') {
         returned_data = obj[0].trim();
@@ -103,11 +103,11 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
         //failed if logs returns data
         error += obj[0].trim();
 
-        var lines = obj[1].split(os.EOL);
-        var foundException = false;
+        const lines = obj[1].split(os.EOL);
+        //const foundException = false;
         lines.forEach(function (line) {
           if (_.startsWith(line, 'Exception')) {
-            var foundException = true;
+            //foundException = true;
             error += line;
           }
         });
@@ -125,17 +125,17 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
     if (!data3 || !data3.raw) {
       error += 'docker rm -f failed !data3.raw ';
     } else {
-      var obj = JSON.parse(data3.raw);
-      var id = obj[0].trim();
+      const obj = JSON.parse(data3.raw);
+      const id = obj[0].trim();
 
       if (id !== containerid) {
         throw 'failed to remove docker container ' + data3.raw;
       }
     }
 
-    var result = {
-      ok: error.length === 0,
+    const result = {
       error: null,
+      ok: error.length === 0,
       returnedData: null,
     };
 
@@ -147,13 +147,13 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
       result.returnedData = returned_data;
     }
 
-    //debug('result', result);
+    //console.log('result', result);
     return result;
   }).catch(function (e) {
     return {
+      error: error + ' ' + e,
       ok: false,
       returnedData: returned_data,
-      error: error + ' ' + e
     };
   });
 
@@ -162,9 +162,9 @@ var zkcliViaDocker = function (cmdArray, cmd?) {
 
 
 
-var clusterprop = function (options) {
+const clusterprop = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
     util.format(' -cmd clusterprop '),
@@ -176,22 +176,23 @@ var clusterprop = function (options) {
 };
 
 
-var makepath = function (options) {
+const makepath = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd %s', options.cmd)
+    util.format(' -cmd %s', options.cmd),
   ];
 
   return zkcliViaDocker(cmdArray);
 };
 
-//Exception in thread "main" org.apache.solr.common.SolrException: solr.xml does not exist in /opt/solr/server/solr/configsets cannot start Solr
-//var linkconfig = function (options) {
-//  var debug = require('debug')('solr-zkcli:lib/index.js linkconfig');
+//Exception in thread "main" org.apache.solr.common.SolrException: solr.xml does not exist in 
+///opt/solr / server / solr / configsets cannot start Solr
+//const linkconfig = function (options) {
+//  const console.log = require('console.log')('solr-zkcli:lib/index.js linkconfig');
 
-//  var cmdArray = [
+//  const cmdArray = [
 //    util.format('run-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s', options.zkhost),
 //    ' -cmd linkconfig ',
 //    util.format(' -collection %s ', options.collection),
@@ -202,46 +203,46 @@ var makepath = function (options) {
 //};
 
 
-var put = function (options) {
+const put = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd %s', options.cmd)
+    util.format(' -cmd %s', options.cmd),
   ];
 
   return zkcliViaDocker(cmdArray);
 };
 
-var get = function (options) {
+const get = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd %s', options.cmd)
+    util.format(' -cmd %s', options.cmd),
   ];
 
   return zkcliViaDocker(cmdArray, 'get');
 };
 
 
-var list = function (options) {
+const list = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd %s', options.cmd)
+    util.format(' -cmd %s', options.cmd),
   ];
 
   return zkcliViaDocker(cmdArray, 'list');
 };
 
-var clear = function (options) {
+const clear = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host '),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd %s', options.cmd)
+    util.format(' -cmd %s', options.cmd),
   ];
 
   return zkcliViaDocker(cmdArray);
@@ -249,80 +250,80 @@ var clear = function (options) {
 
 
 
-var getfile = function (options) {
+const getfile = function (options) {
 
-  var cmdParts = options.cmd.split(' ');
-  var zkPath = cmdParts[1];
-  var filePath = cmdParts[2];
-  var filePathDirname = path.dirname(filePath);
-  var fileName = path.basename(filePath);
+  const cmdParts = options.cmd.split(' ');
+  const zkPath = cmdParts[1];
+  const filePath = cmdParts[2];
+  const filePathDirname = path.dirname(filePath);
+  const fileName = path.basename(filePath);
 
-  debug('filePathDirname', filePathDirname);
-  debug('fileName', fileName);
+  console.log('filePathDirname', filePathDirname);
+  console.log('fileName', fileName);
 
-  var cmdArray = [
-    util.format('run --net host -v %s:/var/opt ', filePathDirname),
+  const cmdArray = [
+    util.format('run --net host -v %s:/const/opt ', filePathDirname),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s ', options.zkhost),
-    util.format(' -cmd getfile %s /var/opt/%s ', zkPath, fileName)
+    util.format(' -cmd getfile %s /const/opt/%s ', zkPath, fileName),
   ];
 
   return zkcliViaDocker(cmdArray, 'getfile');
 };
 
-var putfile = function (options) {
+const putfile = function (options) {
 
-  var cmdParts = options.cmd.split(' ');
-  var zkPath = cmdParts[1];
-  var filePath = cmdParts[2];
-  var filePathDirname = path.dirname(filePath);
-  var fileName = path.basename(filePath);
+  const cmdParts = options.cmd.split(' ');
+  const zkPath = cmdParts[1];
+  const filePath = cmdParts[2];
+  const filePathDirname = path.dirname(filePath);
+  const fileName = path.basename(filePath);
 
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', filePathDirname),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s', options.zkhost),
-    util.format(' -cmd putfile %s /opt/solr/server/solr/configsets/%s', zkPath, fileName)
+    util.format(' -cmd putfile %s /opt/solr/server/solr/configsets/%s', zkPath, fileName),
   ];
 
   return zkcliViaDocker(cmdArray);
 };
 
 
-var bootstrap = function (options) {
+const bootstrap = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.solrhome),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s', options.zkhost),
     ' -cmd bootstrap ',
-    ' -solrhome /opt/solr/server/solr/configsets '
+    ' -solrhome /opt/solr/server/solr/configsets ',
   ];
 
   return zkcliViaDocker(cmdArray);
 };
 
 
-var upconfig = function (options) {
+const upconfig = function (options) {
 
-  var cmdArray = [
+  const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.confdir),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s', options.zkhost),
     util.format(' -cmd %s ', options.cmd),
     util.format(' -confname %s ', options.confname),
-    ' -confdir /opt/solr/server/solr/configsets '
+    ' -confdir /opt/solr/server/solr/configsets ',
   ];
 
   return zkcliViaDocker(cmdArray);
 };
 
 
-var downconfig = function (options) {
+const downconfig = function (options) {
 
-  var cmdArray = [
-    util.format('run --net host -v %s:/var/opt ', options.confdir),
+  const cmdArray = [
+    util.format('run --net host -v %s:/const/opt ', options.confdir),
     util.format('-d quobjectio/solr:1.0.0 ./server/scripts/cloud-scripts/zkcli.sh -zkhost %s', options.zkhost),
     util.format(' -cmd %s ', options.cmd),
     util.format(' -confname %s ', options.confname),
-    ' -confdir /var/opt '
+    ' -confdir /const/opt ',
   ];
 
   return zkcliViaDocker(cmdArray);
@@ -414,6 +415,7 @@ export class Options implements IOptions {
     public zkhost?: string,
     public confname?: string,
     public confdir?: string,
+    // tslint:disable-next-line: no-shadowed-variable
     public clusterprop?: { name: string, val: string }
   ) { }
 }
