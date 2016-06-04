@@ -26,9 +26,6 @@ const waitForContainerToFinish = function (containerid: string, options?) {
     endTime: moment().add(options.timeoutInSeconds, 's'),
     startTime: moment(),
   };
-
-
-
   //console.log('options', options);
 
   const now = moment();
