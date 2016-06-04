@@ -1,12 +1,14 @@
 ﻿import * as _ from 'lodash';
-import * as Promise from 'bluebird';
 //import * as child_process from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
 import * as moment from 'moment';
 import { Docker } from 'docker-cli-js';
+import nodeify from 'nodeify-ts';
+const promiseDelay = require('promise-delay');
 const JSONPath = require('jsonpath-plus');
+
 //const exec2 = child_process.exec;
 
 
@@ -36,8 +38,9 @@ const waitForContainerToFinish = function (containerid: string, options?) {
   //console.log('diff ms', diff);
 
   if (now.isBefore(options.internalUseOnly.endTime)) {
-    return Promise.delay(options.checkIntervalInMilliSeconds).then(function () {
-
+    return Promise.resolve().then(function () {
+      return promiseDelay(options.checkIntervalInMilliSeconds);
+    }).then(function () {
       const docker = new Docker();
 
       return docker.command('ps');
@@ -330,16 +333,9 @@ const downconfig = function (options) {
 };
 
 
-
-
-
-
-
-
-
 export function exec (options: Options, callback?: (err, data) => void)  {
 
-  return Promise.resolve().then(function () {
+  const promise = Promise.resolve().then(function () {
     if (!options) {
       throw 'need options object';
     }
@@ -394,8 +390,9 @@ export function exec (options: Options, callback?: (err, data) => void)  {
 
     throw 'options.cmd ' + options.cmd + ' not implemented';
 
-  }).nodeify(callback);
+  });
 
+  return nodeify(promise, callback);
 }
 
 

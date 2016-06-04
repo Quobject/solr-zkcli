@@ -21,8 +21,5 @@ test('solr-zkcli', t => {
       console.log('data = ', util.inspect(data, { depth: 10 }));
       t.ok(data);
     });
-
   });
-
-
 });

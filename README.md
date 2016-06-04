@@ -4,6 +4,9 @@ A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud con
 [![NPM](https://nodei.co/npm/solr-zkcli.png?downloads=true&downloadRank=true)](https://nodei.co/npm/solr-zkcli/)
 [![NPM](https://nodei.co/npm-dl/solr-zkcli.png?months=6&height=3)](https://nodei.co/npm/solr-zkcli/)
 
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][downloads-image]][downloads-url]
+
 ## Installation
 
 ### Step 1: Prerequisites
@@ -240,3 +243,12 @@ solrZkcli( options ).then(function (data) {
 
 //data =  { ok: true }
 ```
+
+## License
+
+MIT
+
+[npm-image]: https://img.shields.io/npm/v/zolr-zkcli.svg?style=flat
+[npm-url]: https://npmjs.org/package/zolr-zkcli
+[downloads-image]: https://img.shields.io/npm/dm/zolr-zkcli.svg?style=flat
+[downloads-url]: https://npmjs.org/package/zolr-zkcli
