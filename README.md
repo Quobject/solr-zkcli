@@ -248,7 +248,7 @@ solrZkcli( options ).then(function (data) {
 
 MIT
 
-[npm-image]: https://img.shields.io/npm/v/zolr-zkcli.svg?style=flat
-[npm-url]: https://npmjs.org/package/zolr-zkcli
-[downloads-image]: https://img.shields.io/npm/dm/zolr-zkcli.svg?style=flat
-[downloads-url]: https://npmjs.org/package/zolr-zkcli
+[npm-image]: https://img.shields.io/npm/v/solr-zkcli.svg?style=flat
+[npm-url]: https://npmjs.org/package/solr-zkcli
+[downloads-image]: https://img.shields.io/npm/dm/solr-zkcli.svg?style=flat
+[downloads-url]: https://npmjs.org/package/solr-zkcli
