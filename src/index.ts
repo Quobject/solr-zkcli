@@ -1,6 +1,6 @@
 ﻿import * as _ from 'lodash';
 //import * as child_process from 'child_process';
-import * as os from 'os';
+//import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
 import * as moment from 'moment';
@@ -45,7 +45,7 @@ const waitForContainerToFinish = function (containerid: string, options?) {
       //console.log('data.containerList', data.containerList);
       //'$.*[?(@.names="zookeeper")]'      
       const result = JSONPath({ json: data.containerList, path: '$.*.container id' });
-      const stillRunning = _.contains(result, containerid);
+      const stillRunning = _.includes(result, containerid);
       //console.log('result', result);
       //console.log('stillRunning', stillRunning);
 
@@ -89,44 +89,51 @@ const zkcliViaDocker = function (cmdArray, cmd?) {
     return docker.command(command2);
 
   }).then(function (data2) {
+    //console.log('data2', data2);
 
-    if (!data2 || !data2.raw) {
+    if (!data2) {
       error += 'docker logs failed !data2 ';
     } else {
-      const obj = JSON.parse(data2.raw);
+      //if (data2.raw === '') {
+      //  data2.raw = '{}';
+      //}
+
+      //const obj = JSON.parse(data2.raw);
 
       if (cmd === 'get') {
-        returned_data = obj[0].trim();
+        returned_data = data2.raw;
       } else if (cmd === 'list') {
-        returned_data = obj[0].trim().split(os.EOL);
+        returned_data = data2.raw; //obj.split(os.EOL);
       } else {
         //failed if logs returns data
-        error += obj[0].trim();
+        error += data2.raw;
 
-        const lines = obj[1].split(os.EOL);
-        //const foundException = false;
-        lines.forEach(function (line) {
-          if (_.startsWith(line, 'Exception')) {
-            //foundException = true;
-            error += line;
-          }
-        });
+        //const lines = obj.split(os.EOL);
+        ////const foundException = false;
+        //lines.forEach(function (line) {
+        //  if (_.startsWith(line, 'Exception')) {
+        //    //foundException = true;
+        //    error += line;
+        //  }
+        //});
       }
 
     }
 
   }).then(function () {
+    //console.log('error 0', error);
+
     if (containerid) {
       return docker.command('rm -f ' + containerid);
     }
 
   }).then(function (data3) {
+    //console.log('data3', data3);
 
     if (!data3 || !data3.raw) {
       error += 'docker rm -f failed !data3.raw ';
     } else {
-      const obj = JSON.parse(data3.raw);
-      const id = obj[0].trim();
+      const id = data3.raw.trim();
 
       if (id !== containerid) {
         throw 'failed to remove docker container ' + data3.raw;
@@ -146,18 +153,19 @@ const zkcliViaDocker = function (cmdArray, cmd?) {
     if (returned_data) {
       result.returnedData = returned_data;
     }
-
+    //console.log('error 1', error);
     //console.log('result', result);
+
     return result;
   }).catch(function (e) {
+
+    //console.log('error 2', error);
     return {
       error: error + ' ' + e,
       ok: false,
       returnedData: returned_data,
     };
   });
-
-
 };
 
 

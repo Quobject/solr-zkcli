@@ -10,10 +10,10 @@ test('solr-zkcli', t => {
   t.test('upconfig', t => {
     const options = new Options(
       /* cmd */ 'upconfig',
-      /* currentWorkingDirectory */  path.join(__dirname, '..', 'test', 'test1'),
-      /* zkhost */ '127.0.0.1:9983',
+      /* currentWorkingDirectory */  null,
+      /* zkhost */ '127.0.0.1:2181',
       /* confname */ 'my_new_config',
-      /* confdir */ 'server/solr/configsets/basic_configs/conf',
+      /* confdir */ path.resolve(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf'),
       /* clusterprop*/ null
       );
 
