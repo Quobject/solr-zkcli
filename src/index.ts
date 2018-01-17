@@ -9,18 +9,17 @@ const JSONPath = require('jsonpath-plus');
 
 //const exec2 = child_process.exec;
 
-
 class WaitForContainerToFinishOptions {
   public internalUseOnly: { endTime: moment.Moment, startTime: moment.Moment };
 
   public constructor(
     public timeoutInSeconds: number = 15,
-    public checkIntervalInMilliSeconds: number = 500
+    public checkIntervalInMilliSeconds: number = 500,
   ) {
     this.internalUseOnly = {
       endTime: moment().add(timeoutInSeconds, 's'),
-      startTime: moment()
-    }
+      startTime: moment(),
+    };
   }
 }
 
@@ -31,7 +30,7 @@ const waitForContainerToFinish = function (containerid: string,
   if (!options) {
     options = new WaitForContainerToFinishOptions();
   }
-   
+
   const now = moment();
 
   //console.log('now', now.format());
@@ -47,7 +46,7 @@ const waitForContainerToFinish = function (containerid: string,
       return docker.command('ps');
     }).then(function (data) {
       //console.log('data.containerList', data.containerList);
-      //'$.*[?(@.names="zookeeper")]'      
+      //'$.*[?(@.names="zookeeper")]'
       const result = JSONPath({ json: data.containerList, path: '$.*.container id' });
       const stillRunning = _.includes(result, containerid);
       //console.log('result', result);
@@ -56,12 +55,10 @@ const waitForContainerToFinish = function (containerid: string,
       if (stillRunning) {
         return waitForContainerToFinish(containerid, options);
       }
-
     });
   }
 
   return Promise.resolve().then(function () {
-
     const docker = new Docker();
 
     return docker.command('rm -f ' + containerid);
@@ -75,9 +72,8 @@ export class SolrSkcliResult {
   public constructor(
     public error = '',
     public ok = false,
-    public returnedData = ''
+    public returnedData = '',
   ) {
-
   }
 }
 
@@ -88,7 +84,6 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
   let returned_data = '';
 
   return Promise.resolve().then(function () {
-
     const command = cmdArray.join('');
 
     return docker.command(command);
@@ -100,7 +95,6 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
   }).then(function () {
     const command2 = 'logs ' + containerid;
     return docker.command(command2);
-
   }).then(function (data2) {
     //console.log('data2', data2);
 
@@ -130,16 +124,13 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
         //  }
         //});
       }
-
     }
-
   }).then(function () {
     //console.log('error 0', error);
 
     if (containerid) {
       return docker.command('rm -f ' + containerid);
     }
-
   }).then(function (data3) {
     //console.log('data3', data3);
 
@@ -164,27 +155,22 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
   });
 };
 
-
-
 const clusterprop = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
-    util.format(' -cmd clusterprop ')
+    util.format(' -cmd clusterprop '),
   ];
 
   if (options.clusterprop) {
-    cmdArray.push(util.format(' -name %s', options.clusterprop.name))
-    cmdArray.push(util.format(' -val %s', options.clusterprop.val))
+    cmdArray.push(util.format(' -name %s', options.clusterprop.name));
+    cmdArray.push(util.format(' -val %s', options.clusterprop.val));
   }
 
   return zkcliViaDocker(cmdArray);
 };
 
-
 const makepath = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
@@ -194,7 +180,7 @@ const makepath = function (options: SolrSkcliOptions) {
   return zkcliViaDocker(cmdArray);
 };
 
-//Exception in thread "main" org.apache.solr.common.SolrException: solr.xml does not exist in 
+//Exception in thread "main" org.apache.solr.common.SolrException: solr.xml does not exist in
 ///opt/solr / server / solr / configsets cannot start Solr
 //const linkconfig = function (options) {
 //  const console.log = require('console.log')('solr-zkcli:lib/index.js linkconfig');
@@ -209,9 +195,7 @@ const makepath = function (options: SolrSkcliOptions) {
 //  return zkcliViaDocker(cmdArray);
 //};
 
-
 const put = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
@@ -222,7 +206,6 @@ const put = function (options: SolrSkcliOptions) {
 };
 
 const get = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
@@ -233,7 +216,6 @@ const get = function (options: SolrSkcliOptions) {
 };
 
 const list = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
@@ -244,7 +226,6 @@ const list = function (options: SolrSkcliOptions) {
 };
 
 const clear = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host '),
     options.BaseCommand(),
@@ -255,7 +236,6 @@ const clear = function (options: SolrSkcliOptions) {
 };
 
 const getfile = function (options: SolrSkcliOptions) {
-
   const cmdParts = options.cmd.split(' ');
   const zkPath = cmdParts[1];
   const filePath = cmdParts[2];
@@ -275,13 +255,11 @@ const getfile = function (options: SolrSkcliOptions) {
 };
 
 const putfile = function (options: SolrSkcliOptions) {
-
   const cmdParts = options.cmd.split(' ');
   const zkPath = cmdParts[1];
   const filePath = cmdParts[2];
   const filePathDirname = path.dirname(filePath);
   const fileName = path.basename(filePath);
-
 
   const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', filePathDirname),
@@ -293,7 +271,6 @@ const putfile = function (options: SolrSkcliOptions) {
 };
 
 const bootstrap = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.solrhome),
     options.BaseCommand(),
@@ -305,7 +282,6 @@ const bootstrap = function (options: SolrSkcliOptions) {
 };
 
 const upconfig = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.confdir),
     options.BaseCommand(),
@@ -318,7 +294,6 @@ const upconfig = function (options: SolrSkcliOptions) {
 };
 
 const downconfig = function (options: SolrSkcliOptions) {
-
   const cmdArray = [
     util.format('run --net host -v %s:/const/opt ', options.confdir),
     options.BaseCommand(),
@@ -330,8 +305,7 @@ const downconfig = function (options: SolrSkcliOptions) {
   return zkcliViaDocker(cmdArray);
 };
 
-export function SolrZkCliCommand (options: SolrSkcliOptions, callback?: (err: string, data: string) => void)  {
-
+export function SolrZkCliCommand(options: SolrSkcliOptions, callback?: (err: string, data: string) => void) {
   const promise = Promise.resolve().then(function () {
     if (!options) {
       throw new Error('need options object');
@@ -351,27 +325,27 @@ export function SolrZkCliCommand (options: SolrSkcliOptions, callback?: (err: st
       return bootstrap(options);
     }
 
-    if (options.cmd.startsWith( 'put ')) {
+    if (options.cmd.startsWith('put ')) {
       return put(options);
     }
 
-    if (options.cmd.startsWith( 'get ')) {
+    if (options.cmd.startsWith('get ')) {
       return get(options);
     }
 
-    if (options.cmd.startsWith( 'putfile ')) {
+    if (options.cmd.startsWith('putfile ')) {
       return putfile(options);
     }
 
-    if (options.cmd.startsWith( 'list')) {
+    if (options.cmd.startsWith('list')) {
       return list(options);
     }
 
-    if (options.cmd.startsWith( 'clear')) {
+    if (options.cmd.startsWith('clear')) {
       return clear(options);
     }
 
-    if (options.cmd.startsWith( 'getfile ')) {
+    if (options.cmd.startsWith('getfile ')) {
       return getfile(options);
     }
 
@@ -379,7 +353,7 @@ export function SolrZkCliCommand (options: SolrSkcliOptions, callback?: (err: st
     //  return bootstrap(options);
     //}
 
-    if (options.cmd.startsWith( 'makepath ')) {
+    if (options.cmd.startsWith('makepath ')) {
       return makepath(options);
     }
 
@@ -388,19 +362,12 @@ export function SolrZkCliCommand (options: SolrSkcliOptions, callback?: (err: st
     }
 
     throw new Error('options.cmd ' + options.cmd + ' not implemented');
-
   });
 
   return nodeify(promise, callback);
 }
 
-
 export class SolrSkcliOptions {
-
-  public BaseCommand(): string {
-    return ` -d ${this.solrDockerImage} ./server/scripts/cloud-scripts/zkcli.sh -zkhost ${this.zkhost} `;
-  }
-
   public constructor(
     public cmd: string,
     public currentWorkingDirectory?: string,
@@ -410,7 +377,10 @@ export class SolrSkcliOptions {
     // tslint:disable-next-line: no-shadowed-variable
     public clusterprop?: { name: string, val: string },
     public solrhome?: string,
-    public solrDockerImage = 'solr:7.2.0'
+    public solrDockerImage = 'solr:7.2.0',
   ) { }
-}
 
+  public BaseCommand(): string {
+    return ` -d ${this.solrDockerImage} ./server/scripts/cloud-scripts/zkcli.sh -zkhost ${this.zkhost} `;
+  }
+}

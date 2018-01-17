@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as util from 'util';
 import { } from 'jasmine';
 
-//./node_modules/.bin/concurrently --kill-others "tsc -w" "nodemon ./lib/index.js" "npm run test" "npm run reload" 
+//./node_modules/.bin/concurrently --kill-others "tsc -w" "nodemon ./lib/index.js" "npm run test" "npm run reload"
 
 describe('index', () => {
   //let originalTimeout: number;
@@ -19,14 +19,13 @@ describe('index', () => {
   //});
 
   it('getLastPartOfId should work', (done) => {
-
     const solrSkcliOptions = new SolrSkcliOptions(
       /* cmd */ 'upconfig',
       /* currentWorkingDirectory */  undefined,
       /* zkhost */ '127.0.0.1:2181',
       /* confname */ 'my_new_config',
       /* confdir */ path.resolve(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf'),
-      /* clusterprop*/ undefined
+      /* clusterprop*/ undefined,
     );
 
     return Promise.resolve().then(() => {
@@ -36,8 +35,5 @@ describe('index', () => {
       expect(data.ok).toBeTruthy();
       done();
     });
-    
   });
 });
-
-
