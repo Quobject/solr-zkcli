@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { SolrSkcliOptions, SolrZkCliCommand, SolrSkcliResult } from './index';
+import { SolrZkcliOptions, SolrZkCliCommand, SolrZkcliResult } from './index';
 import * as path from 'path';
 import * as util from 'util';
 import { } from 'jasmine';
@@ -19,7 +19,7 @@ describe('index', () => {
   //});
 
   it('getLastPartOfId should work', (done) => {
-    const solrSkcliOptions = new SolrSkcliOptions(
+    const solrZkcliOptions = new SolrZkcliOptions(
       /* cmd */ 'upconfig',
       /* currentWorkingDirectory */  undefined,
       /* zkhost */ '127.0.0.1:2181',
@@ -29,8 +29,8 @@ describe('index', () => {
     );
 
     return Promise.resolve().then(() => {
-      return SolrZkCliCommand(solrSkcliOptions);
-    }).then((data: SolrSkcliResult) => {
+      return SolrZkCliCommand(solrZkcliOptions);
+    }).then((data: SolrZkcliResult) => {
       console.log('data = ', util.inspect(data, { depth: 10 }));
       expect(data.ok).toBeTruthy();
       done();

@@ -33,7 +33,7 @@ With promise
 
 ```js
 
-const solrSkcliOptions = new solrZkcli.SolrSkcliOptions(
+const solrZkcliOptions = new solrZkcli.SolrZkcliOptions(
   /* cmd */ 'upconfig', 
   /* currentWorkingDirectory */ undefined, 
   /* zkhost */ '127.0.0.1:2181', 
@@ -64,9 +64,9 @@ solrZkcli.SolrZkCliCommand( options, function (err, data) {
 ## typescript
 
 ```js
-import { SolrSkcliOptions, SolrZkCliCommand, SolrSkcliResult } from 'solr-zkcli';
+import { SolrZkcliOptions, SolrZkCliCommand, SolrZkcliResult } from 'solr-zkcli';
 
-const solrSkcliOptions = new SolrSkcliOptions(
+const solrZkcliOptions = new SolrZkcliOptions(
   /* cmd */ 'upconfig',
   /* currentWorkingDirectory */  undefined,
   /* zkhost */ '127.0.0.1:2181',
@@ -76,7 +76,7 @@ const solrSkcliOptions = new SolrSkcliOptions(
 );
 
 
-SolrZkCliCommand(solrSkcliOptions).then((data: SolrSkcliResult) => {
+SolrZkCliCommand(solrZkcliOptions).then((data: SolrZkcliResult) => {
   console.log('data = ', data);       
 });
 
