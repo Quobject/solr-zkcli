@@ -33,13 +33,6 @@ With promise
 
 ```js
 
-var options = {
-  zkhost: '127.0.0.1:9983',
-  cmd: 'upconfig',
-  confname: 'my_new_config',
-  confdir: 'server/solr/configsets/basic_configs/conf'
-};
-
 const solrSkcliOptions = new solrZkcli.SolrSkcliOptions(
   /* cmd */ 'upconfig', 
   /* currentWorkingDirectory */ undefined, 
