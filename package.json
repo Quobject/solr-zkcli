@@ -1,18 +1,17 @@
 {
   "name": "solr-zkcli",
-  "version": "2.0.3",
+  "version": "3.0.0",
+  "private": true,
   "description": "A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage SolrCloud configuration parameters",
   "main": "dist/index.js",
-  "typings": "dist/index",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "lint": "tslint src/**/*.ts",
-    "build": "rimraf dist/ && tsc",
-    "test-spec": "ts-node node_modules/blue-tape/bin/blue-tape.js \"src/**/*.spec.ts\" | tap-diff",
-    "test": "npm run lint && npm run build && npm run test-spec",
-    "prepublish": "npm run lint && npm run build && rimraf dist/**/*.spec.* "
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "test": "nodemon --watch ./lib ./spec/runjasmine.js",
+    "reload": "reload -d ./spec/results report.html",
+    "clean": "rm -rf lib"
   },
   "repository": {
     "type": "git",
@@ -33,20 +32,22 @@
   },
   "homepage": "https://github.com/Quobject/solr-zkcli",
   "devDependencies": {
-    "blue-tape": "^0.2.0",
-    "rimraf": "^2.5.4",
-    "tap-diff": "^0.1.1",
-    "ts-node": "^0.7.3",
-    "tslint": "^3.15.1",
-    "typescript": "^1.8.10"
+    "@types/jasmine": "2.8.4",
+    "@types/lodash": "^4.14.92",
+    "@types/node": "9.3.0",
+    "concurrently": "3.5.1",
+    "jasmine": "2.8.0",
+    "jasmine-pretty-html-reporter": "0.2.5",
+    "nodemon": "^1.14.11",
+    "ts-node": "4.1.0",
+    "typescript": "2.6.2"
   },
   "dependencies": {
-    "core-js": "^2.4.1",
-    "docker-cli-js": "^2.0.6",
-    "jsonpath-plus": "^0.15.0",
-    "lodash": "^4.15.0",
-    "moment": "^2.14.1",
-    "nodeify-ts": "^1.0.1",
-    "promise-delay": "^2.1.0"
+    "docker-cli-js": "2.2.0",
+    "jsonpath-plus": "0.16.0",
+    "lodash": "4.17.4",
+    "moment": "2.20.1",
+    "nodeify-ts": "1.0.1",
+    "promise-delay": "2.1.0"
   }
 }

@@ -1,25 +1,43 @@
-/* tslint:disable:no-shadowed-variable */
 /* tslint:disable:no-unused-variable */
-import test = require('blue-tape');
+import { SolrSkcliOptions, SolrZkCliCommand, SolrSkcliResult } from './index';
 import * as path from 'path';
 import * as util from 'util';
-import { Options, exec as solrZkCliCommand } from './index';
+import { } from 'jasmine';
 
-test('solr-zkcli', t => {
+//./node_modules/.bin/concurrently --kill-others "tsc -w" "nodemon ./lib/index.js" "npm run test" "npm run reload" 
 
-  t.test('upconfig', t => {
-    const options = new Options(
+describe('index', () => {
+  //let originalTimeout: number;
+
+  //beforeEach(function () {
+  //  originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+  //  jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+  //});
+
+  //afterEach(function () {
+  //  jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+  //});
+
+  it('getLastPartOfId should work', (done) => {
+
+    const solrSkcliOptions = new SolrSkcliOptions(
       /* cmd */ 'upconfig',
-      /* currentWorkingDirectory */  null,
+      /* currentWorkingDirectory */  undefined,
       /* zkhost */ '127.0.0.1:2181',
       /* confname */ 'my_new_config',
       /* confdir */ path.resolve(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf'),
-      /* clusterprop*/ null
-      );
+      /* clusterprop*/ undefined
+    );
 
-    return solrZkCliCommand(options).then(function (data) {
+    return Promise.resolve().then(() => {
+      return SolrZkCliCommand(solrSkcliOptions);
+    }).then((data: SolrSkcliResult) => {
       console.log('data = ', util.inspect(data, { depth: 10 }));
-      t.ok(data);
+      expect(data.ok).toBeTruthy();
+      done();
     });
+    
   });
 });
+
+
