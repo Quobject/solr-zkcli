@@ -85,9 +85,11 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
 
   return Promise.resolve().then(function () {
     const command = cmdArray.join('');
+    console.log('zkcliViaDocker command', command);
 
     return docker.command(command);
   }).then(function (data) {
+    console.log('zkcliViaDocker data', data);
     containerid = data.containerId;
     //return Promise.delay(10000);
 
@@ -96,7 +98,7 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
     const command2 = 'logs ' + containerid;
     return docker.command(command2);
   }).then(function (data2) {
-    //console.log('data2', data2);
+    console.log('zkcliViaDocker data2', data2);
 
     if (!data2) {
       error += 'docker logs failed !data2 ';
@@ -109,8 +111,8 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
 
       if (cmd === 'get') {
         returned_data = data2.raw;
-      } else if (cmd === 'list') {
-        returned_data = data2.raw; //obj.split(os.EOL);
+      } else if (cmd === 'list' || cmd === 'mkroot') {
+        returned_data = data2.raw; 
       } else {
         //failed if logs returns data
         error += data2.raw;
@@ -305,6 +307,17 @@ const downconfig = function (options: SolrZkcliOptions) {
   return zkcliViaDocker(cmdArray);
 };
 
+const mkroot = function (options: SolrZkcliOptions) {
+  const cmdArray = [
+    util.format('run --net host '),
+    options.BaseCommandSolr(),
+    util.format(` mkroot /${options.confname} `),
+    util.format(` -z ${options.zkhost} `),
+  ];
+
+  return zkcliViaDocker(cmdArray, 'mkroot');
+};
+
 export function SolrZkCliCommand(options: SolrZkcliOptions, callback?: (err: string, data: string) => void) {
   const promise = Promise.resolve().then(function () {
     if (!options) {
@@ -315,6 +328,10 @@ export function SolrZkCliCommand(options: SolrZkcliOptions, callback?: (err: str
 
     if (options.cmd === 'upconfig') {
       return upconfig(options);
+    }
+
+    if (options.cmd === 'upconfig2') {
+      return upconfig2(options);
     }
 
     if (options.cmd === 'downconfig') {
@@ -361,6 +378,10 @@ export function SolrZkCliCommand(options: SolrZkcliOptions, callback?: (err: str
       return clusterprop(options);
     }
 
+    if (options.cmd === 'mkroot') {
+      return mkroot(options);
+    }
+
     throw new Error('options.cmd ' + options.cmd + ' not implemented');
   });
 
@@ -382,5 +403,9 @@ export class SolrZkcliOptions {
 
   public BaseCommand(): string {
     return ` -d ${this.solrDockerImage} ./server/scripts/cloud-scripts/zkcli.sh -zkhost ${this.zkhost} `;
+  }
+
+  public BaseCommandSolr(): string {
+    return ` -d ${this.solrDockerImage} ./bin/solr zk `;
   }
 }
