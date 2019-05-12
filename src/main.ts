@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 import { Docker } from 'docker-cli-js';
 import nodeify from 'nodeify-ts';
 const promiseDelay = require('promise-delay');
-const JSONPath = require('jsonpath-plus');
+//const JSONPath = require('jsonpath-plus');
+import { JSONPath} from 'jsonpath-plus';
 
 //const exec2 = child_process.exec;
 

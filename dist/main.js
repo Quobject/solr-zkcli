@@ -17,7 +17,8 @@ const _ = __importStar(require("lodash"));
 const docker_cli_js_1 = require("docker-cli-js");
 const nodeify_ts_1 = __importDefault(require("nodeify-ts"));
 const promiseDelay = require('promise-delay');
-const JSONPath = require('jsonpath-plus');
+//const JSONPath = require('jsonpath-plus');
+const jsonpath_plus_1 = require("jsonpath-plus");
 //const exec2 = child_process.exec;
 class WaitForContainerToFinishOptions {
     constructor(timeoutInSeconds = 15, checkIntervalInMilliSeconds = 500) {
@@ -47,7 +48,7 @@ const waitForContainerToFinish = function (containerid, options = new WaitForCon
         }).then(function (data) {
             //console.log('data.containerList', data.containerList);
             //'$.*[?(@.names="zookeeper")]'
-            const result = JSONPath({ json: data.containerList, path: '$.*.container id' });
+            const result = jsonpath_plus_1.JSONPath({ json: data.containerList, path: '$.*.container id' });
             const stillRunning = _.includes(result, containerid);
             //console.log('result', result);
             //console.log('stillRunning', stillRunning);
