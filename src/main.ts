@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as util from 'util';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as _ from 'lodash';
 import { Docker } from 'docker-cli-js';
 import nodeify from 'nodeify-ts';
@@ -112,7 +112,7 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
       if (cmd === 'get') {
         returned_data = data2.raw;
       } else if (cmd === 'list' || cmd === 'mkroot') {
-        returned_data = data2.raw; 
+        returned_data = data2.raw;
       } else {
         //failed if logs returns data
         error += data2.raw;
@@ -328,10 +328,6 @@ export function SolrZkCliCommand(options: SolrZkcliOptions, callback?: (err: str
 
     if (options.cmd === 'upconfig') {
       return upconfig(options);
-    }
-
-    if (options.cmd === 'upconfig2') {
-      return upconfig2(options);
     }
 
     if (options.cmd === 'downconfig') {

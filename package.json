@@ -1,16 +1,21 @@
 {
   "name": "solr-zkcli",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage SolrCloud configuration parameters",
-  "main": "lib/index.js",
-  "files": [
-    "lib/"
-  ],
+  "license": "MIT",
+  "author": {
+    "name": "Matthias Ludwig",
+    "email": "mludwig@quobject.io"
+  },
+  "main": "./dist/main.js",
   "scripts": {
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "nodemon --watch ./lib ./spec/runjasmine.js",
-    "reload": "reload -d ./spec/results report.html",
-    "clean": "rm -rf lib"
+    "clean": "npx del dist",
+    "lint": "npx tslint --project .",
+    "compile": "npx tsc",
+    "build": "npm run lint && npm run clean && npm run compile",
+    "test": "npm run build && npx jasmine",
+    "app": "npm run compile && node \"./dist/main.js\" ",
+    "crunch": "chokidar \"src/**/*.*\" -c \"npm run test\" --silent=true"
   },
   "repository": {
     "type": "git",
@@ -24,29 +29,33 @@
     "zkcli.sh",
     "SolrCloud"
   ],
-  "author": "Matthias Ludwig <mludwig@quobject.io>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Quobject/solr-zkcli/issues"
   },
   "homepage": "https://github.com/Quobject/solr-zkcli",
   "devDependencies": {
-    "@types/jasmine": "2.8.4",
-    "@types/lodash": "^4.14.92",
-    "@types/node": "9.3.0",
-    "concurrently": "3.5.1",
-    "jasmine": "2.8.0",
-    "jasmine-pretty-html-reporter": "0.2.5",
-    "nodemon": "^1.14.11",
-    "ts-node": "4.1.0",
-    "typescript": "2.6.2"
+    "@types/jasmine": "3.3.12",
+    "chokidar-cli": "1.2.2",
+    "del": "4.1.1",
+    "del-cli": "1.1.0",
+    "jasmine": "3.4.0",
+    "jasmine-reporters": "2.3.2",
+    "jasmine-ts-console-reporter": "3.1.1",
+    "npm-run-all": "4.1.5",
+    "npx": "10.2.0",
+    "ts-node": "8.1.0",
+    "tslint": "5.16.0",
+    "typescript": "3.4.5",
+    "@types/lodash": "4.14.126",
+    "@types/node": "10.14.6",
+    "concurrently": "4.1.0"
   },
   "dependencies": {
-    "docker-cli-js": "2.2.0",
-    "jsonpath-plus": "0.16.0",
-    "lodash": "4.17.4",
-    "moment": "2.20.1",
-    "nodeify-ts": "1.0.1",
+    "docker-cli-js": "2.5.2",
+    "jsonpath-plus": "0.18.0",
+    "lodash": "4.17.11",
+    "moment": "2.24.0",
+    "nodeify-ts": "1.0.6",
     "promise-delay": "2.1.0"
   }
 }
