@@ -1,26 +1,21 @@
 # solr-zkcli
 A node.js wrapper for the Solr's ZooKeeper CLI zkcli.sh to manage [SolrCloud configuration parameters](https://cwiki.apache.org/confluence/display/solr/Command+Line+Utilities)
 
-[![NPM](https://nodei.co/npm/solr-zkcli.png?downloads=true&downloadRank=true)](https://nodei.co/npm/solr-zkcli/)
-
-
-[![NPM version][npm-image]][npm-url]
-[![NPM downloads][downloads-image]][downloads-url]
 
 ## Installation
 
 ### Step 1: Prerequisites
 
-The [docker](https://docs.docker.com/engine/installation/) command line tool must be installed and accessible in the path. 
+The [docker](https://docs.docker.com/engine/installation/) command line tool must be installed and accessible in the path.
 
 ### Step 2: Get solr image
 
     docker pull solr:7.2.0
 
 ### Step 3: Installation
-  
+
     npm install solr-zkcli
-    
+
 Then:
 
 ```js
@@ -34,17 +29,21 @@ With promise
 ```js
 
 const solrZkcliOptions = new solrZkcli.SolrZkcliOptions(
-  /* cmd */ 'upconfig', 
-  /* currentWorkingDirectory */ undefined, 
-  /* zkhost */ '127.0.0.1:2181', 
-  /* confname */ 'my_new_config', 
-  /* confdir */ 'server/solr/configsets/basic_configs/conf', 
-  /* clusterprop*/ undefined
+  /* cmd */ 'upconfig',
+  /* currentWorkingDirectory */ undefined,
+  /* zkhost */ '127.0.0.1:2181',
+  /* confname */ 'my_new_config',
+  /* confdir */ 'server/solr/configsets/basic_configs/conf',
+  /* clusterprop*/ undefined,
+  /* solrhome */ undefined,
+  /* solrdockerimage */ undefined,
+  /* machineName */ 'localhost',
+  /* network */ 'host',
 );
 
 
 solrZkcli.SolrZkCliCommand( options ).then( (data) => {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -77,7 +76,7 @@ const solrZkcliOptions = new SolrZkcliOptions(
 
 
 SolrZkCliCommand(solrZkcliOptions).then((data: SolrZkcliResult) => {
-  console.log('data = ', data);       
+  console.log('data = ', data);
 });
 
 ```
@@ -96,7 +95,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -113,7 +112,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -130,7 +129,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -147,7 +146,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -166,7 +165,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -185,7 +184,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }
@@ -202,7 +201,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  data =  { ok: true, returnedData: 'some data' }
@@ -219,7 +218,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  data =  { ok: true }
@@ -238,7 +237,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data = {
@@ -265,7 +264,7 @@ var options = {
 };
 
 solrZkcli( options ).then(function (data) {
-  console.log('data = ', data); 
+  console.log('data = ', data);
 });
 
 //data =  { ok: true }

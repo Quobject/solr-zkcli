@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as util from 'util';
 import moment from 'moment';
 import * as _ from 'lodash';
-import { Docker } from 'docker-cli-js';
+import { Docker, Options as DockerOptions } from 'docker-cli-js';
 import nodeify from 'nodeify-ts';
 const promiseDelay = require('promise-delay');
 //const JSONPath = require('jsonpath-plus');
@@ -14,8 +14,8 @@ class WaitForContainerToFinishOptions {
   public internalUseOnly: { endTime: moment.Moment, startTime: moment.Moment };
 
   public constructor(
-    public timeoutInSeconds: number = 15,
-    public checkIntervalInMilliSeconds: number = 500,
+    public timeoutInSeconds: number = 15 * 60,
+    public checkIntervalInMilliSeconds: number = 1000,
   ) {
     this.internalUseOnly = {
       endTime: moment().add(timeoutInSeconds, 's'),
@@ -24,7 +24,7 @@ class WaitForContainerToFinishOptions {
   }
 }
 
-const waitForContainerToFinish = function (containerid: string,
+const waitForContainerToFinish = function (containerid: string, machinename = 'localhost',
   options: WaitForContainerToFinishOptions = new WaitForContainerToFinishOptions()): Promise<void> {
   containerid = containerid.substring(0, 12);
 
@@ -42,7 +42,12 @@ const waitForContainerToFinish = function (containerid: string,
     return Promise.resolve().then(function () {
       return promiseDelay(options.checkIntervalInMilliSeconds);
     }).then(function () {
-      const docker = new Docker();
+      const dockeroptions = new DockerOptions(
+        /* machinename */ machinename === 'localhost' ? undefined : machinename,
+        /* currentWorkingDirectory */ undefined,
+       );
+
+      const docker = new Docker(dockeroptions);
 
       return docker.command('ps');
     }).then(function (data) {
@@ -54,13 +59,18 @@ const waitForContainerToFinish = function (containerid: string,
       //console.log('stillRunning', stillRunning);
 
       if (stillRunning) {
-        return waitForContainerToFinish(containerid, options);
+        return waitForContainerToFinish(containerid, machinename, options);
       }
     });
   }
 
   return Promise.resolve().then(function () {
-    const docker = new Docker();
+    const dockeroptions = new DockerOptions(
+      /* machinename */ machinename === 'localhost' ? undefined : machinename,
+      /* currentWorkingDirectory */ undefined,
+     );
+
+    const docker = new Docker(dockeroptions);
 
     return docker.command('rm -f ' + containerid);
   }).then(function (data) {
@@ -78,7 +88,7 @@ export class SolrZkcliResult {
   }
 }
 
-const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Promise<SolrZkcliResult> {
+const zkcliViaDocker = function (options: SolrZkcliOptions, cmdArray: Array<string>, cmd: string = ''): Promise<SolrZkcliResult> {
   const docker = new Docker();
   let containerid: string;
   let error = '';
@@ -160,7 +170,7 @@ const zkcliViaDocker = function (cmdArray: Array<string>, cmd: string = ''): Pro
 
 const clusterprop = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd clusterprop '),
   ];
@@ -170,17 +180,17 @@ const clusterprop = function (options: SolrZkcliOptions) {
     cmdArray.push(util.format(' -val %s', options.clusterprop.val));
   }
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const makepath = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd %s', options.cmd),
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 //Exception in thread "main" org.apache.solr.common.SolrException: solr.xml does not exist in
@@ -195,47 +205,47 @@ const makepath = function (options: SolrZkcliOptions) {
 //    util.format(' -confname %s ', options.confname)
 //  ];
 
-//  return zkcliViaDocker(cmdArray);
+//  return zkcliViaDocker(options, cmdArray);
 //};
 
 const put = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd %s', options.cmd),
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const get = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd %s', options.cmd),
   ];
 
-  return zkcliViaDocker(cmdArray, 'get');
+  return zkcliViaDocker(options, cmdArray, 'get');
 };
 
 const list = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd %s', options.cmd),
   ];
 
-  return zkcliViaDocker(cmdArray, 'list');
+  return zkcliViaDocker(options, cmdArray, 'list');
 };
 
 const clear = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommand(),
     util.format(' -cmd %s', options.cmd),
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const getfile = function (options: SolrZkcliOptions) {
@@ -249,12 +259,12 @@ const getfile = function (options: SolrZkcliOptions) {
   console.log('fileName', fileName);
 
   const cmdArray = [
-    util.format('run --net host -v %s:/const/opt ', filePathDirname),
+    util.format(`run --net ${options.network} -v %s:/const/opt `, filePathDirname),
     options.BaseCommand(),
     util.format(' -cmd getfile %s /const/opt/%s ', zkPath, fileName),
   ];
 
-  return zkcliViaDocker(cmdArray, 'getfile');
+  return zkcliViaDocker(options, cmdArray, 'getfile');
 };
 
 const putfile = function (options: SolrZkcliOptions) {
@@ -265,58 +275,58 @@ const putfile = function (options: SolrZkcliOptions) {
   const fileName = path.basename(filePath);
 
   const cmdArray = [
-    util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', filePathDirname),
+    util.format(`run --net ${options.network} -v %s:/opt/solr/server/solr/configsets `, filePathDirname),
     options.BaseCommand(),
     util.format(' -cmd putfile %s /opt/solr/server/solr/configsets/%s', zkPath, fileName),
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const bootstrap = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.solrhome),
+    util.format(`run --net ${options.network} -v %s:/opt/solr/server/solr/configsets `, options.solrhome),
     options.BaseCommand(),
     ' -cmd bootstrap ',
     ' -solrhome /opt/solr/server/solr/configsets ',
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const upconfig = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host -v %s:/opt/solr/server/solr/configsets ', options.confdir),
+    util.format(`run --net ${options.network} -v %s:/opt/solr/server/solr/configsets `, options.confdir),
     options.BaseCommand(),
     util.format(' -cmd %s ', options.cmd),
     util.format(' -confname %s ', options.confname),
     ' -confdir /opt/solr/server/solr/configsets ',
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const downconfig = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host -v %s:/const/opt ', options.confdir),
+    util.format(`run --net ${options.network} -v %s:/const/opt `, options.confdir),
     options.BaseCommand(),
     util.format(' -cmd %s ', options.cmd),
     util.format(' -confname %s ', options.confname),
     ' -confdir /const/opt ',
   ];
 
-  return zkcliViaDocker(cmdArray);
+  return zkcliViaDocker(options, cmdArray);
 };
 
 const mkroot = function (options: SolrZkcliOptions) {
   const cmdArray = [
-    util.format('run --net host '),
+    util.format(`run --net ${options.network} `),
     options.BaseCommandSolr(),
     util.format(` mkroot /${options.confname} `),
     util.format(` -z ${options.zkhost} `),
   ];
 
-  return zkcliViaDocker(cmdArray, 'mkroot');
+  return zkcliViaDocker(options, cmdArray, 'mkroot');
 };
 
 export function SolrZkCliCommand(options: SolrZkcliOptions, callback?: (err: string, data: string) => void) {
@@ -396,6 +406,8 @@ export class SolrZkcliOptions {
     public clusterprop?: { name: string, val: string },
     public solrhome?: string,
     public solrDockerImage = 'solr:7.2.0',
+    public machineName = 'localhost',
+    public network = 'host',
   ) { }
 
   public BaseCommand(): string {

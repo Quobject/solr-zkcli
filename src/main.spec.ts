@@ -9,13 +9,14 @@ describe('SolrZkCliCommand', () => {
     const solrZkcliOptions = new SolrZkcliOptions(
         /* cmd */ 'upconfig',
         /* currentWorkingDirectory */  undefined,
-        /* zkhost */ '127.0.0.1:2181/mychroot',
+        /* zkhost */ 'zookeeper-ap-southeast-2-1:2181/my_new_config',
         /* confname */ 'my_new_config',
-        /* confdir */ path.resolve(__dirname, '..', 'test', 'solr', 'fmlogs', 'conf'),
+        /* confdir */ '/fleetmake/ebs/solr-fmlogs-ap-southeast-2-1-1/for_upconfig/fmlogs/conf',
         /* clusterprop*/ undefined,
         /* solrhome */ undefined,
         /* solrdockerimage */ 'quobjectio/solr:7.2.1',
-
+        /* machineName */ 'localhost',
+        /* network */ 'fm-net',
     );
 
     return Promise.resolve().then(() => {
@@ -33,12 +34,14 @@ describe('SolrZkCliCommand', () => {
 //      const solrZkcliOptions = new SolrZkcliOptions(
 //        /* cmd */ 'mkroot',
 //        /* currentWorkingDirectory */  undefined,
-//        /* zkhost */ '127.0.0.1:2181',
+//        /* zkhost */ 'zookeeper-ap-southeast-2-1:2181',
 //        /* confname */ 'my_new_config',
 //        /* confdir */ undefined,
 //        /* clusterprop*/ undefined,
 //        /* solrhome */ undefined,
 //        /* solrdockerimage */ 'quobjectio/solr:7.2.1',
+//        /* machineName */ 'localhost',
+//        /* network */ 'fm-net',
 
 //      );
 
