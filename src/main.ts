@@ -89,7 +89,14 @@ export class SolrZkcliResult {
 }
 
 const zkcliViaDocker = function (options: SolrZkcliOptions, cmdArray: Array<string>, cmd: string = ''): Promise<SolrZkcliResult> {
-  const docker = new Docker();
+  const machinename = options.machineName;
+  const dockeroptions = new DockerOptions(
+    /* machinename */ machinename === 'localhost' ? undefined : machinename,
+    /* currentWorkingDirectory */ undefined,
+   );
+
+  const docker = new Docker(dockeroptions);
+
   let containerid: string;
   let error = '';
   let returned_data = '';
@@ -104,7 +111,7 @@ const zkcliViaDocker = function (options: SolrZkcliOptions, cmdArray: Array<stri
     containerid = data.containerId;
     //return Promise.delay(10000);
 
-    return waitForContainerToFinish(containerid);
+    return waitForContainerToFinish(containerid, options.machineName);
   }).then(function () {
     const command2 = 'logs ' + containerid;
     return docker.command(command2);
