@@ -54,7 +54,7 @@
     "docker-cli-js": "2.5.3",
     "jsonpath-plus": "0.20.1",
     "lodash": "4.17.19",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "nodeify-ts": "1.0.6",
     "promise-delay": "2.1.0"
   }
